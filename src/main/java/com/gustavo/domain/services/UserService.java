@@ -1,7 +1,8 @@
-package com.gustavo.finance.service;
+package com.gustavo.domain.services;
 
-import com.gustavo.finance.entity.User;
-import com.gustavo.finance.repository.UserRepository;
+
+import com.gustavo.domain.entities.User;
+import com.gustavo.domain.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service

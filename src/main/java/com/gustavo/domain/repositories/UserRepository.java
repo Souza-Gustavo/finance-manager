@@ -1,6 +1,6 @@
-package com.gustavo.finance.repository;
+package com.gustavo.domain.repositories;
 
-import com.gustavo.finance.entity.User;
+import com.gustavo.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

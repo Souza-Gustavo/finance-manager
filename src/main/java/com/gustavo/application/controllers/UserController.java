@@ -1,7 +1,10 @@
-package com.gustavo.finance.controller;
+package com.gustavo.application.controllers;
 
-import com.gustavo.finance.entity.User;
-import com.gustavo.finance.service.UserService;
+
+
+import com.gustavo.domain.services.UserService;
+import com.gustavo.domain.entities.User;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
