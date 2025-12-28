@@ -1,11 +1,12 @@
-package com.gustavo.domain.services;
+package com.gustavo.finance.domain.services;
 
-import com.gustavo.domain.entities.Installment;
-import com.gustavo.domain.entities.InstallmentParcel;
-import com.gustavo.domain.repositories.InstallmentParcelRepository;
-import com.gustavo.domain.repositories.InstallmentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.gustavo.finance.domain.entities.Installment;
+import com.gustavo.finance.domain.entities.InstallmentParcel;
+import com.gustavo.finance.domain.repositories.InstallmentParcelRepository;
+import com.gustavo.finance.domain.repositories.InstallmentRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

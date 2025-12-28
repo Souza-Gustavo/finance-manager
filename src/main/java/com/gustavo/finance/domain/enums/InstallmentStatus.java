@@ -1,4 +1,4 @@
-package com.gustavo.domain.enums;
+package com.gustavo.finance.domain.enums;
 
 public enum InstallmentStatus {
     ACTIVE,

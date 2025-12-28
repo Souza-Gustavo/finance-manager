@@ -1,10 +1,11 @@
-package com.gustavo.domain.services;
+package com.gustavo.finance.domain.services;
 
-import com.gustavo.domain.entities.Transaction;
-import com.gustavo.domain.entities.User;
-import com.gustavo.domain.enums.TransactionType;
-import com.gustavo.domain.repositories.TransactionRepository;
 import org.springframework.stereotype.Service;
+
+import com.gustavo.finance.domain.entities.Transaction;
+import com.gustavo.finance.domain.entities.User;
+import com.gustavo.finance.domain.enums.TransactionType;
+import com.gustavo.finance.domain.repositories.TransactionRepository;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,9 +1,10 @@
-package com.gustavo.domain.repositories;
+package com.gustavo.finance.domain.repositories;
 
-import com.gustavo.domain.entities.Transaction;
-import com.gustavo.domain.entities.User;
-import com.gustavo.domain.enums.TransactionType;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.gustavo.finance.domain.entities.Transaction;
+import com.gustavo.finance.domain.entities.User;
+import com.gustavo.finance.domain.enums.TransactionType;
 
 import java.time.LocalDate;
 import java.util.List;

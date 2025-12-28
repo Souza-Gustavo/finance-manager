@@ -1,9 +1,10 @@
-package com.gustavo.domain.repositories;
+package com.gustavo.finance.domain.repositories;
 
-import com.gustavo.domain.entities.Installment;
-import com.gustavo.domain.entities.User;
-import com.gustavo.domain.enums.InstallmentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.gustavo.finance.domain.entities.Installment;
+import com.gustavo.finance.domain.entities.User;
+import com.gustavo.finance.domain.enums.InstallmentStatus;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.gustavo.domain.entities;
+package com.gustavo.finance.domain.entities;
 
 import jakarta.persistence.*;
 

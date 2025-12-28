@@ -1,12 +1,13 @@
-package com.gustavo.domain.entities;
+package com.gustavo.finance.domain.entities;
 
-import com.gustavo.domain.enums.Category;
-import com.gustavo.domain.enums.TransactionType;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.gustavo.finance.domain.enums.Category;
+import com.gustavo.finance.domain.enums.TransactionType;
 
 @Entity
 @Table(name = "transactions")

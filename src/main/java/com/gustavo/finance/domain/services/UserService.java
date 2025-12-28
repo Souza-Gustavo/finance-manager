@@ -1,9 +1,10 @@
-package com.gustavo.domain.services;
+package com.gustavo.finance.domain.services;
 
 
-import com.gustavo.domain.entities.User;
-import com.gustavo.domain.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+
+import com.gustavo.finance.domain.entities.User;
+import com.gustavo.finance.domain.repositories.UserRepository;
 
 @Service
 public class UserService {
@@ -23,6 +24,11 @@ public class UserService {
         }
 
         return userRepository.save(user);
+    }
+
+    public User findById(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
     
 }

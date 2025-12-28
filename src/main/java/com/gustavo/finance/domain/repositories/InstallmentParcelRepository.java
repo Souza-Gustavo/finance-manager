@@ -1,8 +1,9 @@
-package com.gustavo.domain.repositories;
+package com.gustavo.finance.domain.repositories;
 
-import com.gustavo.domain.entities.Installment;
-import com.gustavo.domain.entities.InstallmentParcel;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.gustavo.finance.domain.entities.Installment;
+import com.gustavo.finance.domain.entities.InstallmentParcel;
 
 import java.time.LocalDate;
 import java.util.List;
