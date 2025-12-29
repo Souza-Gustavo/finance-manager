@@ -6,8 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.gustavo.finance.domain.entities.User;
+import com.gustavo.finance.application.dto.UserCreateDTO;
+import com.gustavo.finance.application.dto.UserResponseDTO;
 import com.gustavo.finance.domain.services.UserService;
+
+import jakarta.validation.Valid;
+
+import java.util.List;
 
 
 @RestController
@@ -20,10 +25,18 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public ResponseEntity<User> cadastrar(@RequestBody User user) {
-        User usuarioSalvo = userService.cadastrar(user);
-         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
+   @PostMapping
+    public ResponseEntity<UserResponseDTO> cadastrar(
+       @Valid @RequestBody UserCreateDTO dto) {
+
+     return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(userService.cadastrar(dto));
+}
+
+    @GetMapping
+        public ResponseEntity<List<UserResponseDTO>> listar() {
+        return ResponseEntity.ok(userService.listarTodos());
     }
     
 }
