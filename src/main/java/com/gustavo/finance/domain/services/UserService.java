@@ -2,11 +2,15 @@ package com.gustavo.finance.domain.services;
 
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.gustavo.finance.application.dto.LoginRequestDTO;
 import com.gustavo.finance.application.dto.UserCreateDTO;
 import com.gustavo.finance.application.dto.UserResponseDTO;
 import com.gustavo.finance.domain.entities.User;
 import com.gustavo.finance.domain.repositories.UserRepository;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 
@@ -21,6 +25,27 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
+    public UserResponseDTO login(LoginRequestDTO dto) {
+
+    User user = userRepository.findByEmail(dto.getEmail())
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.UNAUTHORIZED, "Email ou senha inválidos"
+        ));
+
+    if (!passwordEncoder.matches(dto.getSenha(), user.getSenha())) {
+        throw new ResponseStatusException(
+            HttpStatus.UNAUTHORIZED,
+             "Email ou senha inválidos"
+    );
+}
+
+    return new UserResponseDTO(
+        user.getId(),
+        user.getName(),
+        user.getEmail()
+    );
+}
 
     public UserResponseDTO cadastrar(UserCreateDTO dto) {
 
