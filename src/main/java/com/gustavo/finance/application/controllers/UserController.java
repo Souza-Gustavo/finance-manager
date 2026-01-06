@@ -10,6 +10,7 @@ import com.gustavo.finance.application.dto.UserCreateDTO;
 import com.gustavo.finance.application.dto.UserResponseDTO;
 import com.gustavo.finance.domain.services.UserService;
 import com.gustavo.finance.application.dto.LoginRequestDTO;
+import com.gustavo.finance.application.dto.LoginResponseDTO;
 
 import jakarta.validation.Valid;
 
@@ -27,12 +28,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-        public ResponseEntity<UserResponseDTO> login(@RequestBody LoginRequestDTO dto) {
+        public ResponseEntity<LoginResponseDTO> login(
+         @RequestBody LoginRequestDTO dto) {
 
-         UserResponseDTO response = userService.login(dto);
+        String token = userService.login(dto);
 
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(new LoginResponseDTO(token));
 }
+
 
    @PostMapping
     public ResponseEntity<UserResponseDTO> cadastrar(
@@ -47,5 +50,11 @@ public class UserController {
         public ResponseEntity<List<UserResponseDTO>> listar() {
         return ResponseEntity.ok(userService.listarTodos());
     }
+
+    @GetMapping("/me")
+        public ResponseEntity<UserResponseDTO> me(
+        @RequestHeader("Authorization") String authorization) {
+    return ResponseEntity.ok(userService.me(authorization));
+}
     
 }

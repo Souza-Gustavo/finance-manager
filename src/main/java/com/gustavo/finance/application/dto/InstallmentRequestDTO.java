@@ -3,7 +3,7 @@ package com.gustavo.finance.application.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class InstallmentRequest {
+public class InstallmentRequestDTO {
 
     private String description;
     private BigDecimal totalAmount;

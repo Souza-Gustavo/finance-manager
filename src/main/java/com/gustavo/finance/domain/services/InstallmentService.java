@@ -1,59 +1,57 @@
 package com.gustavo.finance.domain.services;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.gustavo.finance.application.dto.InstallmentRequestDTO;
 import com.gustavo.finance.domain.entities.Installment;
 import com.gustavo.finance.domain.entities.InstallmentParcel;
-import com.gustavo.finance.domain.repositories.InstallmentParcelRepository;
+import com.gustavo.finance.domain.entities.User;
 import com.gustavo.finance.domain.repositories.InstallmentRepository;
+import com.gustavo.finance.domain.repositories.InstallmentParcelRepository;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-
+import java.time.LocalDate;
 
 @Service
 public class InstallmentService {
 
     private final InstallmentRepository installmentRepository;
-    private final InstallmentParcelRepository installmentParcelRepository;
+    private final InstallmentParcelRepository parcelRepository;
 
     public InstallmentService(
             InstallmentRepository installmentRepository,
-            InstallmentParcelRepository installmentParcelRepository
+            InstallmentParcelRepository parcelRepository
     ) {
         this.installmentRepository = installmentRepository;
-        this.installmentParcelRepository = installmentParcelRepository;
+        this.parcelRepository = parcelRepository;
     }
 
-    @Transactional
-    public Installment createInstallment(Installment installment) {
-        Installment savedInstallment = installmentRepository.save(installment);
+    public Installment criar(InstallmentRequestDTO dto, User user) {
 
-        generateParcels(savedInstallment);
+        Installment installment = new Installment();
+        installment.setDescription(dto.getDescription());
+        installment.setTotalAmount(dto.getTotalAmount());
+        installment.setTotalParcels(dto.getTotalParcels());
+        installment.setStartDate(dto.getStartDate());
+        installment.setUser(user);
 
-        return savedInstallment;
-    }
+        Installment salvo = installmentRepository.save(installment);
 
-    private void generateParcels(Installment installment) {
-        BigDecimal parcelValue = installment.getTotalAmount()
-                .divide(
-                    BigDecimal.valueOf(installment.getTotalParcels()),
-                        2,
-                        RoundingMode.HALF_UP
+        BigDecimal valorParcela =
+                dto.getTotalAmount().divide(
+                        BigDecimal.valueOf(dto.getTotalParcels())
                 );
 
-
-        for (int i = 1; i <= installment.getTotalParcels(); i++) {
+        for (int i = 1; i <= dto.getTotalParcels(); i++) {
             InstallmentParcel parcel = new InstallmentParcel();
             parcel.setParcelNumber(i);
-            parcel.setAmount(parcelValue);
-            parcel.setDueDate(
-                    installment.getStartDate().plusMonths(i - 1)
-            );
-            parcel.setInstallment(installment);
+            parcel.setAmount(valorParcela);
+            parcel.setDueDate(dto.getStartDate().plusMonths(i - 1));
+            parcel.setInstallment(salvo);
 
-            installmentParcelRepository.save(parcel);
+            parcelRepository.save(parcel);
         }
+
+        return salvo;
     }
 }
