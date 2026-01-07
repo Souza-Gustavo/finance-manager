@@ -2,15 +2,17 @@ package com.gustavo.finance.domain.services;
 
 import org.springframework.stereotype.Service;
 
+import com.gustavo.finance.application.dto.InstallmentParcelResponseDTO;
 import com.gustavo.finance.application.dto.InstallmentRequestDTO;
 import com.gustavo.finance.domain.entities.Installment;
 import com.gustavo.finance.domain.entities.InstallmentParcel;
 import com.gustavo.finance.domain.entities.User;
-import com.gustavo.finance.domain.repositories.InstallmentRepository;
 import com.gustavo.finance.domain.repositories.InstallmentParcelRepository;
+import com.gustavo.finance.domain.repositories.InstallmentRepository;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class InstallmentService {
@@ -18,6 +20,9 @@ public class InstallmentService {
     private final InstallmentRepository installmentRepository;
     private final InstallmentParcelRepository parcelRepository;
 
+    public List<Installment> listarDoUsuario(User user) {
+    return installmentRepository.findByUser(user);
+}
     public InstallmentService(
             InstallmentRepository installmentRepository,
             InstallmentParcelRepository parcelRepository
@@ -54,4 +59,31 @@ public class InstallmentService {
 
         return salvo;
     }
+
+    public List<InstallmentParcelResponseDTO> listarParcelas(Long installmentId, User user) {
+
+    Installment installment = installmentRepository.findById(installmentId)
+            .orElseThrow(() -> new RuntimeException("Parcelamento não encontrado"));
+
+    if (!installment.getUser().getId().equals(user.getId())) {
+        throw new RuntimeException("Acesso negado");
+    }
+
+    return parcelRepository.findByInstallment(installment)
+            .stream()
+            .map(parcel -> {
+                InstallmentParcelResponseDTO dto =
+                        new InstallmentParcelResponseDTO();
+
+                dto.setId(parcel.getId());
+                dto.setParcelNumber(parcel.getParcelNumber());
+                dto.setAmount(parcel.getAmount());
+                dto.setDueDate(parcel.getDueDate());
+                dto.setPaid(parcel.getPaid());
+                dto.setPaymentDate(parcel.getPaymentDate());
+
+                return dto;
+            })
+            .collect(Collectors.toList());
+}
 }

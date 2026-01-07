@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 public class SecurityConfig {
@@ -32,8 +33,12 @@ public class SecurityConfig {
                     "/users/login",
                     "/h2-console/**"
                 ).permitAll()
-                .anyRequest().authenticated()
-            )
+
+                   .requestMatchers(HttpMethod.POST, "/installments").authenticated()
+                   .requestMatchers(HttpMethod.GET, "/installments").authenticated()
+
+               .anyRequest().authenticated()
+)
             .headers(headers -> headers.frameOptions(frame -> frame.disable()))
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
