@@ -10,4 +10,5 @@ import com.gustavo.finance.domain.entities.User;
 public interface InstallmentRepository extends JpaRepository<Installment, Long> {
 
     List<Installment> findByUser(User user);
+
 }

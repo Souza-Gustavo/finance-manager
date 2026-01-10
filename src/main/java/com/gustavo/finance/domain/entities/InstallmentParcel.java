@@ -24,7 +24,7 @@ public class InstallmentParcel {
     private LocalDate dueDate;
 
     @Column(nullable = false)
-    private Boolean paid = false;
+    private boolean paid = false;
 
     @Column(name = "payment_date")
     private LocalDate paymentDate;
@@ -40,12 +40,12 @@ public class InstallmentParcel {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
-        public Long getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getParcelNumber() {
@@ -72,11 +72,11 @@ public class InstallmentParcel {
         this.dueDate = dueDate;
     }
 
-    public Boolean getPaid() {
+    public boolean isPaid() {
         return paid;
     }
 
-    public void setPaid(Boolean paid) {
+    public void setPaid(boolean paid) {
         this.paid = paid;
     }
 
@@ -107,5 +107,11 @@ public class InstallmentParcel {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    
 
 }

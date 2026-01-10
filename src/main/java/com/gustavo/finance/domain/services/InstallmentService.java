@@ -79,7 +79,7 @@ public class InstallmentService {
                 dto.setParcelNumber(parcel.getParcelNumber());
                 dto.setAmount(parcel.getAmount());
                 dto.setDueDate(parcel.getDueDate());
-                dto.setPaid(parcel.getPaid());
+                dto.setPaid(parcel.isPaid());
                 dto.setPaymentDate(parcel.getPaymentDate());
 
                 return dto;
