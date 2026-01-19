@@ -11,4 +11,6 @@ public interface InstallmentParcelRepository
         extends JpaRepository<InstallmentParcel, Long> {
 
     List<InstallmentParcel> findByInstallment(Installment installment);
+
+    boolean exixtsByInstallmentAndPaidFalse(Installment installment);
 }

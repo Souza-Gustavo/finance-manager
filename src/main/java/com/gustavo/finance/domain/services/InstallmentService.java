@@ -1,5 +1,15 @@
 package com.gustavo.finance.domain.services;
 
+import com.gustavo.finance.application.exceptions.ResourceNotFoundException;
+import com.gustavo.finance.application.exceptions.AccessDeniedException;
+import com.gustavo.finance.application.exceptions.BusinessException;
+
+import java.math.RoundingMode;
+import java.time.LocalDate;
+
+import com.gustavo.finance.domain.repositories.CategoryRepository;
+import com.gustavo.finance.domain.entities.Category;
+
 import org.springframework.stereotype.Service;
 
 import com.gustavo.finance.application.dto.InstallmentParcelResponseDTO;
@@ -19,54 +29,71 @@ public class InstallmentService {
 
     private final InstallmentRepository installmentRepository;
     private final InstallmentParcelRepository parcelRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<Installment> listarDoUsuario(User user) {
     return installmentRepository.findByUser(user);
 }
     public InstallmentService(
             InstallmentRepository installmentRepository,
-            InstallmentParcelRepository parcelRepository
+            InstallmentParcelRepository parcelRepository,
+            CategoryRepository categoryRepository
     ) {
         this.installmentRepository = installmentRepository;
         this.parcelRepository = parcelRepository;
+        this.categoryRepository = categoryRepository;
     }
 
-    public Installment criar(InstallmentRequestDTO dto, User user) {
+public Installment criar(InstallmentRequestDTO dto, User user) {
 
-        Installment installment = new Installment();
-        installment.setDescription(dto.getDescription());
-        installment.setTotalAmount(dto.getTotalAmount());
-        installment.setTotalParcels(dto.getTotalParcels());
-        installment.setStartDate(dto.getStartDate());
-        installment.setUser(user);
+    Category category = null;
 
-        Installment salvo = installmentRepository.save(installment);
+    if (dto.getCategoryId() != null) {
+        category = categoryRepository.findById(dto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada"));
 
-        BigDecimal valorParcela =
-                dto.getTotalAmount().divide(
-                        BigDecimal.valueOf(dto.getTotalParcels())
-                );
-
-        for (int i = 1; i <= dto.getTotalParcels(); i++) {
-            InstallmentParcel parcel = new InstallmentParcel();
-            parcel.setParcelNumber(i);
-            parcel.setAmount(valorParcela);
-            parcel.setDueDate(dto.getStartDate().plusMonths(i - 1));
-            parcel.setInstallment(salvo);
-
-            parcelRepository.save(parcel);
+        if (!category.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("Categoria não pertence ao usuário");
         }
-
-        return salvo;
     }
+
+    Installment installment = new Installment();
+    installment.setDescription(dto.getDescription());
+    installment.setTotalAmount(dto.getTotalAmount());
+    installment.setTotalParcels(dto.getTotalParcels());
+    installment.setStartDate(dto.getStartDate());
+    installment.setUser(user);
+    installment.setCategory(category);
+
+    Installment salvo = installmentRepository.save(installment);
+
+    BigDecimal valorParcela =
+            dto.getTotalAmount().divide(
+                    BigDecimal.valueOf(dto.getTotalParcels()),
+                    2,
+                    RoundingMode.HALF_UP
+            );
+
+    for (int i = 1; i <= dto.getTotalParcels(); i++) {
+        InstallmentParcel parcel = new InstallmentParcel();
+        parcel.setParcelNumber(i);
+        parcel.setAmount(valorParcela);
+        parcel.setDueDate(dto.getStartDate().plusMonths(i - 1));
+        parcel.setInstallment(salvo);
+
+        parcelRepository.save(parcel);
+    }
+
+    return salvo;
+}
 
     public List<InstallmentParcelResponseDTO> listarParcelas(Long installmentId, User user) {
 
     Installment installment = installmentRepository.findById(installmentId)
-            .orElseThrow(() -> new RuntimeException("Parcelamento não encontrado"));
+            .orElseThrow(() -> new ResourceNotFoundException("Parcelamento não encontrado"));
 
     if (!installment.getUser().getId().equals(user.getId())) {
-        throw new RuntimeException("Acesso negado");
+        throw new AccessDeniedException("Acesso negado");
     }
 
     return parcelRepository.findByInstallment(installment)
@@ -86,4 +113,48 @@ public class InstallmentService {
             })
             .collect(Collectors.toList());
 }
+
+    public void marcarParcelaComoPaga(Long parcelId, User user) {
+
+    InstallmentParcel parcel = parcelRepository.findById(parcelId)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("Parcela não encontrada"));
+
+    Installment installment = parcel.getInstallment();
+
+    if (!installment.getUser().getId().equals(user.getId())) {
+        throw new AccessDeniedException("Acesso negado");
+    }
+
+    if (parcel.isPaid()) {
+        throw new BusinessException("Parcela já está paga");
+    }
+
+
+    parcel.setPaid(true);
+    parcel.setPaymentDate(LocalDate.now());
+    parcelRepository.save(parcel);
+
+
+    boolean existeParcelaAberta =
+            parcelRepository.existsByInstallmentAndPaidFalse(installment);
+
+
+    if (!existeParcelaAberta) {
+        installment.setStatus(InstallmentStatus.FINISHED);
+    } else {
+        installment.setStatus(InstallmentStatus.ACTIVE);
+    }
+
+    installmentRepository.save(installment);
+}
+
+    public List<Installment> listarAtivosDoUsuario(User user) {
+        return installmentRepository.findByUsersAndStatus(
+            user,
+            InstallmentStatus,ACTIVE
+        );
+    }
+
+
 }
