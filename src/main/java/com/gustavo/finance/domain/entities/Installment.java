@@ -1,5 +1,6 @@
 package com.gustavo.finance.domain.entities;
 
+import com.gustavo.finance.domain.entities.Category;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -35,6 +36,10 @@ public class Installment {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -95,6 +100,14 @@ public class Installment {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
 }
