@@ -1,7 +1,7 @@
 package com.gustavo.finance.domain.repositories;
 
-import com.seuprojeto.domain.entity.Category;
-import com.seuprojeto.domain.entity.User;
+import com.gustavo.finance.domain.entities.Category;
+import com.gustavo.finance.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,5 +11,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Optional<Category> findByNameAndUser(String name, User user);
 
-    List<Category> findAllByUser(User user);
+    List<Category> findByUser(User user);
 }

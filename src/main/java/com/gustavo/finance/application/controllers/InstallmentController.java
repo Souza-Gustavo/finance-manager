@@ -41,7 +41,7 @@ public class InstallmentController {
                         installment.getTotalAmount(),
                         installment.getTotalParcels(),
                         installment.getStartDate(),
-                        installment.getStatus(),
+                        installment.getStatus().name(),
                         installment.getCategory() != null
                                 ? installment.getCategory().getName()
                                 : null
@@ -65,7 +65,7 @@ public class InstallmentController {
                                         installment.getTotalAmount(),
                                         installment.getTotalParcels(),
                                         installment.getStartDate(),
-                                        installment.getStatus(),
+                                        installment.getStatus().name(),
                                         installment.getCategory() != null
                                                 ? installment.getCategory().getName()
                                                 : null
@@ -110,7 +110,7 @@ public class InstallmentController {
                                     installment.getTotalAmount(),
                                     installment.getTotalParcels(),
                                     installment.getStartDate(),
-                                    installment.getStatus(),
+                                    installment.getStatus().name(),
                                     installment.getCategory() != null
                                             ? installment.getCategory().getName()
                                             : null

@@ -1,18 +1,10 @@
 package com.gustavo.finance.application.controllers;
 
-import com.gustavo.finance.domain.exceptions.InvalidCredentialsException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.stereotype.Component;
 
-@RestControllerAdvice
+@ControllerAdvice
+@Component("globalExceptionHandlerControllers") // nome único para evitar conflito
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<String> handleInvalidCredentials(InvalidCredentialsException ex) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(ex.getMessage());
-    }
 }

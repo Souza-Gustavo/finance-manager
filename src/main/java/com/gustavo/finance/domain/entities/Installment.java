@@ -1,13 +1,11 @@
 package com.gustavo.finance.domain.entities;
 
-import com.gustavo.finance.domain.entities.Category;
 import jakarta.persistence.*;
-
+import com.gustavo.finance.domain.enums.InstallmentStatus;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import com.gustavo.finance.domain.enums.InstallmentStatus;
 
 @Entity
 @Table(name = "installments")
@@ -88,6 +86,10 @@ public class Installment {
 
     public InstallmentStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(InstallmentStatus status) {
+        this.status = status;
     }
 
     public User getUser() {

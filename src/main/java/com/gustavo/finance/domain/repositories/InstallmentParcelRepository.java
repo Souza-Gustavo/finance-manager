@@ -12,5 +12,5 @@ public interface InstallmentParcelRepository
 
     List<InstallmentParcel> findByInstallment(Installment installment);
 
-    boolean exixtsByInstallmentAndPaidFalse(Installment installment);
+    boolean existsByInstallmentAndPaidFalse(Installment installment);
 }
