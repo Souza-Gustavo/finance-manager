@@ -1,8 +1,9 @@
+import Login from "./pages/Login";
+
 function App() {
   return (
     <div>
-      <h1>Finance Manager</h1>
-      <p>Frontend iniciado com sucesso 🚀</p>
+      <Login />
     </div>
   );
 }

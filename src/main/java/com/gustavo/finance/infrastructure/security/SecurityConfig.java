@@ -28,16 +28,14 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/users",
-                    "/users/login",
-                    "/h2-console/**"
-                ).permitAll()
+                .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
 
-                   .requestMatchers(HttpMethod.POST, "/installments").authenticated()
-                   .requestMatchers(HttpMethod.GET, "/installments").authenticated()
+                .requestMatchers(HttpMethod.POST, "/installments").authenticated()
+                .requestMatchers(HttpMethod.GET, "/installments").authenticated()
 
-               .anyRequest().authenticated()
+                .anyRequest().authenticated()
 )
             .headers(headers -> headers.frameOptions(frame -> frame.disable()))
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
