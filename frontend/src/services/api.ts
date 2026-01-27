@@ -1,16 +1,17 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:8080",
+  baseURL: "http://localhost:8080",
 });
 
-export async function login(email: string, password: string) {
-    const response = await api.post("/auth/login", {
-        email,
-        password,
-    });
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
 
-    return response.data;
-}
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
 
 export default api;
