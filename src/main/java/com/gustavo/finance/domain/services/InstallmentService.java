@@ -150,4 +150,19 @@ public class InstallmentService {
         return installmentRepository.findByUserAndStatus(user, InstallmentStatus.ACTIVE);
     }
 
+    public void excluir(Long installmentId, User user) {
+        Installment installment = installmentRepository.findById(installmentId)
+            .orElseThrow(() -> new ResourceNotFoundException("Parcelamento não encontrado"));
+
+        if (!installment.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("Acesso negado");
+        }
+
+    // Excluir parcelas primeiro
+    parcelRepository.deleteByInstallment(installment);
+
+    // Excluir o parcelamento
+    installmentRepository.delete(installment);
+    }
+
 }

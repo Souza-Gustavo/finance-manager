@@ -6,7 +6,15 @@ export interface User {
     email: string;
 }
 
-export async function getME(): Promise<User> {
-    const response = await api.get("/users/me");
+export async function getMe(): Promise<User> {
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Token não encontrado");
+
+    const response = await api.get("/users/me", {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
     return response.data;
 }

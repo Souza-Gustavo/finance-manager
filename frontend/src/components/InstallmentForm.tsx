@@ -1,54 +1,81 @@
 import { useState } from "react";
-import api from "../services/api";
+import { createInstallment } from "../services/installments";
 
-export function InstallmentForm() {
+interface InstallmentFormProps {
+  onCreated: () => void; // Função para recarregar a lista no Dashboard
+}
+
+export function InstallmentForm({ onCreated }: InstallmentFormProps) {
   const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState("");
-  const [dueDate, setDueDate] = useState("");
+  const [amount, setAmount] = useState<number | "">("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setError("");
 
-    await api.post("/installments", {
-      description,
-      amount: Number(amount),
-      dueDate,
-    });
+    // Validação simples
+    if (!description || !amount || amount <= 0) {
+      setError("Preencha todos os campos corretamente.");
+      return;
+    }
 
-    // limpa formulário (simples por enquanto)
-    setDescription("");
-    setAmount("");
-    setDueDate("");
+    try {
+      setLoading(true);
+
+      // Chama o serviço atualizado que envia todos os campos corretos
+      await createInstallment(description, Number(amount));
+
+      // Limpa os campos do formulário
+      setDescription("");
+      setAmount("");
+
+      // Atualiza a lista de parcelas no Dashboard
+      onCreated();
+    } catch (err: any) {
+      console.error("Erro ao criar parcela:", err);
+
+      // Exibe mensagem do backend se houver
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Não foi possível cadastrar a parcela");
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Nova Parcela</h3>
+    <form onSubmit={handleSubmit} style={{ margin: "20px 0" }}>
+      <div style={{ marginBottom: "10px" }}>
+        <label>Descrição:</label>
+        <input
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          style={{ marginLeft: "10px" }}
+        />
+      </div>
 
-      <input
-        type="text"
-        placeholder="Descrição"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        required
-      />
+      <div style={{ marginBottom: "10px" }}>
+        <label>Valor:</label>
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) =>
+            setAmount(e.target.value ? Number(e.target.value) : "")
+          }
+          style={{ marginLeft: "10px" }}
+        />
+      </div>
 
-      <input
-        type="number"
-        placeholder="Valor"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        required
-      />
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <input
-        type="date"
-        value={dueDate}
-        onChange={(e) => setDueDate(e.target.value)}
-        required
-      />
-
-      <button type="submit">Cadastrar</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Cadastrando..." : "Cadastrar"}
+      </button>
     </form>
   );
 }

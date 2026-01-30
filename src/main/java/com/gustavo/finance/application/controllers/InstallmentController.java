@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/installments")
+@CrossOrigin(origins = "http://localhost:5173")
 public class InstallmentController {
 
     private final InstallmentService installmentService;
@@ -119,6 +120,15 @@ public class InstallmentController {
                     .toList();
 
     return ResponseEntity.ok(response);
+}
+
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> excluir(
+        @PathVariable Long id,
+        @AuthenticationPrincipal User user
+) {
+        installmentService.excluir(id, user);
+        return ResponseEntity.noContent().build();
 }
 
 

@@ -1,28 +1,28 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const { signIn } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    setError("");
 
     try {
       await signIn(email, password);
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Erro no login:", error);
-      alert("Login inválido");
+      // redirecionamento já acontece dentro de signIn
+    } catch (err: any) {
+      console.error("Erro no login:", err);
+      setError("Email ou senha inválidos");
     }
   }
 
   return (
-    <div>
+    <div style={{ maxWidth: 400, margin: "50px auto" }}>
       <h2>Login</h2>
 
       <form onSubmit={handleSubmit}>
@@ -32,6 +32,7 @@ function Login() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 
@@ -41,8 +42,11 @@ function Login() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
         <button type="submit">Entrar</button>
       </form>

@@ -13,4 +13,6 @@ public interface InstallmentParcelRepository
     List<InstallmentParcel> findByInstallment(Installment installment);
 
     boolean existsByInstallmentAndPaidFalse(Installment installment);
+
+    void deleteByInstallment(Installment installment);
 }
