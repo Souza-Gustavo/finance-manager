@@ -14,4 +14,6 @@ public interface InstallmentRepository extends JpaRepository<Installment, Long> 
 
     List<Installment> findByUserAndStatus(User user, InstallmentStatus status);
 
+    List<Installment> findByUserAndStatusIn(User user, List<InstallmentStatus> statuses);
+
 }

@@ -1,6 +1,6 @@
 package com.gustavo.finance.application.dto;
 
-import java.math.BidDecimal;
+import java.math.BigDecimal;
 
 public class MonthlySummaryDTO {
 
@@ -9,7 +9,7 @@ public class MonthlySummaryDTO {
 
     private BigDecimal totalInstallments;
 
-    public MonthlySummaryDTO(int year, int month, BidDecimal totalInstallments) {
+    public MonthlySummaryDTO(int year, int month, BigDecimal totalInstallments) {
         this.year = year;
         this.month = month;
         this.totalInstallments = totalInstallments;
@@ -23,7 +23,7 @@ public class MonthlySummaryDTO {
         return month;
     }
 
-    public BigDecimal getTtotalInstallments() {
+    public BigDecimal getTotalInstallments() {
         return totalInstallments;
     }
 

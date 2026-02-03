@@ -150,6 +150,10 @@ public class InstallmentService {
         return installmentRepository.findByUserAndStatus(user, InstallmentStatus.ACTIVE);
     }
 
+    public List<Installment> listarDoUsuarioPorStatus(User user, List<InstallmentStatus> statuses) {
+        return installmentRepository.findByUserAndStatusIn(user, statuses);
+    }
+
     public void excluir(Long installmentId, User user) {
         Installment installment = installmentRepository.findById(installmentId)
             .orElseThrow(() -> new ResourceNotFoundException("Parcelamento não encontrado"));
@@ -163,6 +167,11 @@ public class InstallmentService {
 
     // Excluir o parcelamento
     installmentRepository.delete(installment);
+    }
+
+    // Resumo mensal dos parcelamentos do usuário
+    public MonthlySummaryDTO obterResumoMensal(User user, int mes, int ano) {
+        return null;
     }
 
 }
