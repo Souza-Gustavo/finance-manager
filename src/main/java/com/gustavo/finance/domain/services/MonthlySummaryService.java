@@ -48,4 +48,13 @@ public class MonthlySummaryService {
 
         return new MonthlySummaryDTO(year, month, totalDoMes);
     }
+
+    public List<CategoryMonthlySummaryDTO> gerarResumoPorCategoria(
+            User user,
+            int year,
+            int month
+    ) {
+        return null;
+    }
+
 }
